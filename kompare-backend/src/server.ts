@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
-import path from 'path'
 import helmet from "helmet";
 
 import errorHandler from './utils/errorHandler'
