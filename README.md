@@ -24,6 +24,10 @@ make launch
 ```
 Navigate to *http://localhost:8080/*
 
+## Testing
+```bash
+npm run test
+```
 
 ## Troubleshooting
 If, for some reason, you dont see any coverages or discounts, navigate to '/api/repopulate'. Now, everything should be populated and you can return to '/'. **This is just a precaution. Everything should work.**

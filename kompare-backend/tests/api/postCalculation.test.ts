@@ -43,7 +43,7 @@ describe("POST /calculate", () => {
             city: "Chicago",
             vehiclePower: 100,
             voucher: 0,
-            selectedCoverages: ["664e10dfd90895eb9dee4dd5"], // AO_PLUS with age condition 30
+            selectedCoverages: ["664e6ec6df11c5de7b941e60"], // AO_PLUS with age condition 30
             selectedDiscounts: [],
         };
 
@@ -58,7 +58,7 @@ describe("POST /calculate", () => {
             city: "Miami",
             vehiclePower: 80,
             voucher: 1000, // Large voucher
-            selectedCoverages: ["664e10dfd90895eb9dee4dd4"], // BONUS_PROTECTION
+            selectedCoverages: ["664e6ec6df11c5de7b941e5f"], // BONUS_PROTECTION
             selectedDiscounts: [],
         };
 
@@ -73,8 +73,8 @@ describe("POST /calculate", () => {
             city: "Los Angeles",
             vehiclePower: 110,
             voucher: 0,
-            selectedCoverages: ["664e10dfd90895eb9dee4dd4"],
-            selectedDiscounts: ["664e10dfd90895eb9dee4dd9", "664e10dfd90895eb9dee4dda"], 
+            selectedCoverages: ["664e6ec6df11c5de7b941e5f"],
+            selectedDiscounts: ["664e6ec6df11c5de7b941e64", "664e6ec6df11c5de7b941e65"], 
             // COMMERCIAL and ADVISER - because there arent 2 or more coverages, adviser is not applied
         };
 
@@ -108,7 +108,7 @@ describe("POST /calculate", () => {
             city: "Seattle",
             vehiclePower: 90,
             voucher: 25.555,
-            selectedCoverages: ["664e10dfd90895eb9dee4dd4"],
+            selectedCoverages: ["664e6ec6df11c5de7b941e5f"],
             selectedDiscounts: [],
         };
 
