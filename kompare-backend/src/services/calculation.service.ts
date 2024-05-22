@@ -102,7 +102,6 @@ const calculateInsurancePrice = async (data: GetCoveragesRequestBody) => {
     }
 
     let totalPrice = basePrice + coverageTotal - discountTotal;
-    console.log(totalPrice, coverageTotal, discountTotal);
 
     // Vehicle power surcharge
     const strongCarSurcharge = await Discount.findOne({ name: STRONG_CAR_SURCHARGE });
@@ -130,17 +129,12 @@ const calculateInsurancePrice = async (data: GetCoveragesRequestBody) => {
         totalPrice -= discountPrice;
         discountDetails.push({ name: vipDiscount.name, value: -discountPrice });
     }
-    console.log(totalPrice);
 
     if (voucher) {
         totalPrice -= voucher;
         if (totalPrice < 0) totalPrice = 0;
         discountDetails.push({ name: VOUCHER, value: -round2Decimals(voucher) });
     }
-    console.log(totalPrice);
-
-    console.log(coverageDetails);
-    console.log(discountDetails);
 
     return {
         basePrice: round2Decimals(basePrice),

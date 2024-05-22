@@ -3,7 +3,7 @@ import calculateInsurancePrice from "../../services/calculation.service";
 import { GetCoveragesRequest } from "../../interfaces/calculation.interface";
 
 
-const getCoverages = async (req: GetCoveragesRequest, res: Response): Promise<void> => {
+const postCalculation = async (req: GetCoveragesRequest, res: Response): Promise<void> => {
     try {
         const priceDetails = await calculateInsurancePrice(req.body);
         res.json(priceDetails);
@@ -18,4 +18,4 @@ const getCoverages = async (req: GetCoveragesRequest, res: Response): Promise<vo
     }
 };
 
-export default getCoverages;
+export default postCalculation;

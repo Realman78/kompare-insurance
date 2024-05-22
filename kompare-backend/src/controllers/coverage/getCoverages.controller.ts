@@ -1,11 +1,7 @@
 import { Request, Response } from 'express'
 import Coverage from '../../models/Coverage.model';
 
-interface GetCoveragesRequest extends Request {
-    query: { sort: string};
-}
-
-const getCoverages = async (req: GetCoveragesRequest, res: Response): Promise<void> => {
+const getCoverages = async (req: Request, res: Response): Promise<void> => {
     try {
         const coverages = await Coverage.find({});
 
