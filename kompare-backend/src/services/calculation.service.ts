@@ -115,7 +115,6 @@ const calculateInsurancePrice = async (data: GetCoveragesRequestBody) => {
         totalPrice += discountPrice;
         discountDetails.push({ name: strongCarSurcharge.name, value: discountPrice });
     }
-    console.log(totalPrice);
     // VIP discount
     const vipDiscount = await Discount.findOne({ name: VIP_DISCOUNT });
 
