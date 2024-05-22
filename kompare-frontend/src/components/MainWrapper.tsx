@@ -7,6 +7,7 @@ import Header from "./Header";
 import MainForm from "./MainForm";
 import PriceDetails from "./PriceDetails";
 import Sidebar from "./Sidebar";
+import { ADVISER_DISCOUNT } from "../constants/names.constant";
 
 const MainWrapper: React.FC = () => {
     const [loading, setLoading] = useState(false);
@@ -17,6 +18,8 @@ const MainWrapper: React.FC = () => {
     const [isLastCheckedCoverage, setIsLastCheckedCoverage] = useState<boolean>(false);
 
     const formState = useSelector((state: RootState) => state.form);
+    const config = useSelector((state: RootState) => state.config);
+
     const dispatch = useDispatch<AppDispatch>();
 
     const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
@@ -42,6 +45,14 @@ const MainWrapper: React.FC = () => {
             setShouldSubmit(false);
         }
     }, [shouldSubmit, formState]);
+
+    useEffect(() => {
+        const adviserId = config.discounts.find(d => d.name === ADVISER_DISCOUNT)?._id
+        if (adviserId && formState.selectedDiscounts.includes(adviserId) 
+        && formState.selectedCoverages.length < 2) {
+            dispatch(toggleDiscount(adviserId));
+        }
+    }, [formState.selectedCoverages.length])
 
     const handleCoverageChange = (coverageId: string) => {
         dispatch(toggleCoverage(coverageId));

@@ -20,7 +20,6 @@ export const getCoverages = createAsyncThunk(
   'coverage/getCoverages',
   async () => {
     const response = await fetchCoverages();
-    console.log(response.result);
     return response.result;
   }
 );

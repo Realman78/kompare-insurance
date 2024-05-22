@@ -79,7 +79,6 @@ describe("POST /calculate", () => {
         };
 
         const { body } = await request(app).post("/api/calculate").send(requestBody);
-        console.log(body);
         const totalDiscount = body.discounts.reduce(
             (acc: number, discount: { value: number }) => acc + discount.value,
             0

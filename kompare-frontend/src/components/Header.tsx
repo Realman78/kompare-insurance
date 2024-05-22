@@ -10,13 +10,6 @@ const Header: React.FC<RTSubmitComponentProps> = ({ handleTransactionalChange, l
     const { vehiclePower, selectedDiscounts, selectedCoverages } = useSelector((state: RootState) => state.form);
     const { priceDetails } = useSelector((state: RootState) => state.price);
 
-    // const handleDiscountChange = (discountId: string) => {
-    //   dispatch(toggleDiscount(discountId));
-    //   console.log("unutar funkcije:", selectedDiscounts);
-    //   handleSubmit()
-    //   console.log("unutar funkcije 2:", selectedDiscounts);
-    // };
-
     if (loading) return <div>Loading discounts...</div>;
     if (error) return <div>Error loading discounts: {error}</div>;
 

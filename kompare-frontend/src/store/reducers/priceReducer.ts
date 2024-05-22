@@ -33,8 +33,6 @@ export const calculatePrice = createAsyncThunk(
   'price/calculatePrice',
   async (data: GetCoveragesRequestBody) => {
     const response = await calculateInsurance(data);
-    console.log("marin");
-    console.log(response);
     return response;
   }
 );
