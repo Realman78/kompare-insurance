@@ -1,0 +1,2 @@
+export const AO_PLUS_NO_AGE_CONDITION = "AO+ should have an age condition field set, but it's not found."
+export const ADVISER_SELECTED_CONDITION = "Adviser discount should have a selected condition field set, but it's not found."
