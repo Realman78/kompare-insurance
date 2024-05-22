@@ -3,19 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { toggleCoverage } from '../store/reducers/formReducer';
 import Checkbox from './UI/Checkbox';
-import { SubmitComponentProps } from '../types/types';
+import { RTSubmitComponentProps, SubmitComponentProps } from '../types/types';
 
-const Sidebar: React.FC<SubmitComponentProps> = ({ handleSubmit, loading: globLoading }) => {
-  const dispatch = useDispatch();
+const Sidebar: React.FC<RTSubmitComponentProps> = ({ handleTransactionalChange, loading: globLoading }) => {
   const { coverages, loading, error } = useSelector((state: RootState) => state.config);
   const { selectedCoverages } = useSelector((state: RootState) => state.form);
-
-  const handleCoverageChange = (coverageId: string) => {
-    dispatch(toggleCoverage(coverageId));
-    setTimeout(() => {
-      handleSubmit()
-    }, 0)
-  };
 
   if (loading) return <div>Loading coverages...</div>;
   if (error) return <div>Error loading coverages: {error}</div>;
@@ -27,7 +19,7 @@ const Sidebar: React.FC<SubmitComponentProps> = ({ handleSubmit, loading: globLo
         <Checkbox key={coverage._id} transactionalId={coverage._id}
           transactionalName={coverage.name}
           checked={selectedCoverages.includes(coverage._id)}
-          handleChange={() => handleCoverageChange(coverage._id)} 
+          handleChange={() => handleTransactionalChange(coverage._id)} 
           disabled={loading || globLoading}/>
       ))}
     </div>

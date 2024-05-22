@@ -22,3 +22,17 @@ export type SubmitComponentProps = {
     handleSubmit: (e?: React.FormEvent<HTMLFormElement>) => Promise<void>
     loading: boolean;
 };
+
+export type RTSubmitComponentProps = {
+    handleTransactionalChange: (id: string) => void;
+    loading: boolean;
+};
+
+export type InputFieldProps = {
+    label: string;
+    required: boolean;
+    value: string | number | undefined;
+    type: string;
+    name: string;
+    onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}

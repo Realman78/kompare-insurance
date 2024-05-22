@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
-import { cleanCoverageAndDiscounts } from '../store/reducers/formReducer';
+import { cleanCoverageAndDiscounts, toggleCoverage, toggleDiscount } from '../store/reducers/formReducer';
 import { calculatePrice } from '../store/reducers/priceReducer';
 import Header from './Header';
 import MainForm from './MainForm';
@@ -10,6 +10,7 @@ import Sidebar from './Sidebar';
 
 const MainWrapper: React.FC = () => {
     const [loading, setLoading] = useState(false);
+    const [shouldSubmit, setShouldSubmit] = useState(false);
     const formState = useSelector((state: RootState) => state.form);
     const dispatch = useDispatch<AppDispatch>();
   
@@ -25,25 +26,41 @@ const MainWrapper: React.FC = () => {
       }
     };
   
+    useEffect(() => {
+      if (shouldSubmit) {
+        handleSubmit();
+        setShouldSubmit(false);
+      }
+    }, [shouldSubmit, formState]);
+  
+    const handleCoverageChange = (coverageId: string) => {
+      dispatch(toggleCoverage(coverageId));
+      setShouldSubmit(true);
+    };
+    const handleDiscountChange = (discountId: string) => {
+      dispatch(toggleDiscount(discountId));
+      setShouldSubmit(true);
+    };
+  
     return (
       <>
-        <Header handleSubmit={handleSubmit} loading={loading} />
+        <Header handleTransactionalChange={handleDiscountChange} loading={loading} />
         <div className="flex mt-4 flex-row">
           <div className="flex-grow ml-4">
             <MainForm
               handleSubmit={async (e?: React.FormEvent<HTMLFormElement>) => {
                 if (e)
-                    e.preventDefault();
+                  e.preventDefault();
                 dispatch(cleanCoverageAndDiscounts());
                 setTimeout(() => {
-                  handleSubmit(e);
+                  setShouldSubmit(true);
                 }, 0);
               }}
               loading={loading}
             />
             <PriceDetails />
           </div>
-          <Sidebar handleSubmit={handleSubmit} loading={loading} />
+          <Sidebar handleTransactionalChange={handleCoverageChange} loading={loading} />
         </div>
       </>
     );

@@ -1,18 +1,30 @@
-import Coverage from '../../models/Coverage.model';
-import { Transactional } from '../../types/types';
-import Discount from '../../models/Discount.model';
-import { ADVISER_DISCOUNT, AO_PLUS, BONUS_PROTECTION, COMMERCIAL_DISCOUNT, GLASS_PROTECTION, STRONG_CAR_SURCHARGE, VIP_DISCOUNT } from '../../constants/names.constant';
-import { ADVISER_SELECTED_CONDITION, AO_PLUS_NO_AGE_CONDITION } from '../../constants/errors.constant';
+import Coverage from "../../models/Coverage.model";
+import { Transactional } from "../../types/types";
+import Discount from "../../models/Discount.model";
+import {
+    ADVISER_DISCOUNT,
+    AO_PLUS,
+    BONUS_PROTECTION,
+    COMMERCIAL_DISCOUNT,
+    GLASS_PROTECTION,
+    STRONG_CAR_SURCHARGE,
+    VIP_DISCOUNT,
+    VOUCHER,
+} from "../../constants/names.constant";
+import { ADVISER_SELECTED_CONDITION, AO_PLUS_NO_AGE_CONDITION } from "../../constants/errors.constant";
+import { round2Decimals } from "../../utils/utils";
 
 const calculateInsurancePrice = async (data: any) => {
     const { name, birthdate, city, vehiclePower, voucher, selectedCoverages, selectedDiscounts } = data;
 
-    const customerBirthdate = new Date(birthdate)
-    const today = new Date()
+    const customerBirthdate = new Date(birthdate);
+    const today = new Date();
 
     let age = today.getFullYear() - customerBirthdate.getFullYear();
-    if (today.getMonth() < customerBirthdate.getMonth() ||
-        (today.getMonth() == customerBirthdate.getMonth() && today.getDate() < customerBirthdate.getDate())) {
+    if (
+        today.getMonth() < customerBirthdate.getMonth() ||
+        (today.getMonth() == customerBirthdate.getMonth() && today.getDate() < customerBirthdate.getDate())
+    ) {
         age--;
     }
 
@@ -23,7 +35,7 @@ const calculateInsurancePrice = async (data: any) => {
     for (const coverageId of selectedCoverages) {
         const coverage = await Coverage.findById(coverageId);
         if (coverage && coverage.name) {
-            let coveragePrice = 0
+            let coveragePrice = 0;
             switch (coverage.name) {
                 case BONUS_PROTECTION:
                     coveragePrice = (coverage.values[0] / 100) * basePrice;
@@ -33,7 +45,7 @@ const calculateInsurancePrice = async (data: any) => {
                         coveragePrice = coverage.values[age < coverage.ageCondition ? 0 : 1];
                         break;
                     }
-                    throw new Error(AO_PLUS_NO_AGE_CONDITION)
+                    throw new Error(AO_PLUS_NO_AGE_CONDITION);
                 case GLASS_PROTECTION:
                     coveragePrice = (coverage.values[0] / 100) * vehiclePower;
                     break;
@@ -42,7 +54,7 @@ const calculateInsurancePrice = async (data: any) => {
             }
 
             coverageTotal += coveragePrice;
-            coverageDetails.push({ name: coverage.name, value: coveragePrice });
+            coverageDetails.push({ name: coverage.name, value: round2Decimals(coveragePrice) });
         }
     }
 
@@ -60,69 +72,92 @@ const calculateInsurancePrice = async (data: any) => {
                     discountPrice = (discount.values[0] / 100) * basePrice;
                     break;
                 case ADVISER_DISCOUNT:
-                    if (discount.selectedCondition && selectedDiscounts.length >= discount.selectedCondition) {
-                        coverageDetails = coverageDetails.map(coverage => {
+                    if (discount.selectedCondition && selectedCoverages.length >= discount.selectedCondition) {
+                        const prevSum = coverageDetails.reduce((ps, a) => ps + a.value, 0);
+                        coverageDetails = coverageDetails.map((coverage) => {
                             return {
                                 ...coverage,
-                                value: (1 - (discount.values[0] / 100)) * coverage.value
-                            }
-                        })
+                                value: (1 - discount.values[0] / 100) * coverage.value,
+                            };
+                        });
+                        const currSum = coverageDetails.reduce((ps, a) => ps + a.value, 0);
+                        coverageTotal = currSum
+                        discountDetails.push({ name: discount.name, value: -round2Decimals(prevSum - currSum) });
                         continue;
                     }
-                    if (!discount.selectedCondition)
-                        throw new Error(ADVISER_SELECTED_CONDITION)
+                    if (!discount.selectedCondition) throw new Error(ADVISER_SELECTED_CONDITION);
                 case VIP_DISCOUNT:
-                    vipFlag = discount.vehiclePowerCondition !== null &&
+                    vipFlag =
+                        discount.vehiclePowerCondition !== null &&
                         discount.vehiclePowerCondition !== undefined &&
                         vehiclePower > discount.vehiclePowerCondition;
-                    // discountPrice = (discount.values[0] / 100) * basePrice;
                     continue;
                 default:
                     continue;
             }
             discountTotal += discountPrice;
-            discountDetails.push({ name: discount.name, value: -discountPrice });
+            discountDetails.push({ name: discount.name, value: -round2Decimals(discountPrice) });
         }
     }
 
-    // Apply voucher
     let totalPrice = basePrice + coverageTotal - discountTotal;
+    console.log(totalPrice, coverageTotal, discountTotal);
 
     // Vehicle power surcharge
-    const strongCarSurcharge = await Discount.findOne({ name: STRONG_CAR_SURCHARGE })
+    const strongCarSurcharge = await Discount.findOne({ name: STRONG_CAR_SURCHARGE });
 
-    if (strongCarSurcharge &&
+    if (
+        strongCarSurcharge &&
         strongCarSurcharge.vehiclePowerCondition &&
-        vehiclePower > strongCarSurcharge.vehiclePowerCondition) {
-        const discountPrice = ((strongCarSurcharge.values[0] / 100) * basePrice)
+        vehiclePower > strongCarSurcharge.vehiclePowerCondition
+    ) {
+        const discountPrice = (strongCarSurcharge.values[0] / 100) * basePrice;
         totalPrice += discountPrice;
         discountDetails.push({ name: strongCarSurcharge.name, value: discountPrice });
     }
-
+    console.log(totalPrice);
     // VIP discount
-    const vipDiscount = await Discount.findOne({ name: VIP_DISCOUNT })
+    const vipDiscount = await Discount.findOne({ name: VIP_DISCOUNT });
 
-    if (vipFlag &&
+    if (
+        vipFlag &&
         vipDiscount &&
         vipDiscount.vehiclePowerCondition &&
-        vehiclePower > vipDiscount.vehiclePowerCondition) {
+        vehiclePower > vipDiscount.vehiclePowerCondition
+    ) {
         const discountPrice = (vipDiscount.values[0] / 100) * basePrice;
         totalPrice -= discountPrice;
         discountDetails.push({ name: vipDiscount.name, value: -discountPrice });
     }
+    console.log(totalPrice);
+
     if (voucher) {
         totalPrice -= voucher;
         if (totalPrice < 0) totalPrice = 0;
+        discountDetails.push({ name: VOUCHER, value: -round2Decimals(voucher) });
+
     }
+    console.log(totalPrice);
 
-
+    console.log(coverageDetails);
+    console.log(discountDetails);
 
     return {
-        basePrice,
-        coverages: coverageDetails,
-        discounts: discountDetails,
-        totalPrice,
+        basePrice: round2Decimals(basePrice),
+        coverages: coverageDetails.map(cd => {
+            return {
+                ...cd,
+                value: round2Decimals(cd.value)
+            }
+        }),
+        discounts: discountDetails.map(dd => {
+            return {
+                ...dd,
+                value: round2Decimals(dd.value)
+            }
+        }),
+        totalPrice: round2Decimals(totalPrice),
     };
 };
 
-export default calculateInsurancePrice
+export default calculateInsurancePrice;

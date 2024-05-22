@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../store';
 import { setFormData } from '../store/reducers/formReducer';
 import { SubmitComponentProps } from '../types/types';
+import InputField from './UI/InputField';
+import { isValidDate } from '../utils/utils';
 
 const MainForm: React.FC<SubmitComponentProps> = ({ handleSubmit, loading }) => {
+  const [isFormValid, setIsFormValid] = useState<boolean>(false)
   const dispatch = useDispatch<AppDispatch>();
   const formState = useSelector((state: RootState) => state.form);
 
@@ -13,66 +16,22 @@ const MainForm: React.FC<SubmitComponentProps> = ({ handleSubmit, loading }) => 
     dispatch(setFormData({ [name]: value }));
   };
 
+  useEffect(() => {
+    setIsFormValid(formState.name.length > 0 && isValidDate(formState.birthdate)
+      && formState.city.length > 0 && formState.vehiclePower > 0)
+  }, [formState.name.length, formState.birthdate, formState.city.length, formState.vehiclePower])
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-4 bg-white shadow rounded">
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Name</label>
-        <input
-          type="text"
-          name="name"
-          value={formState.name}
-          onChange={handleChange}
-          required
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Birthdate</label>
-        <input
-          type="date"
-          name="birthdate"
-          value={formState.birthdate}
-          onChange={handleChange}
-          required
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">City</label>
-        <input
-          type="text"
-          name="city"
-          value={formState.city}
-          onChange={handleChange}
-          required
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Vehicle Power</label>
-        <input
-          type="number"
-          name="vehiclePower"
-          value={formState.vehiclePower}
-          onChange={handleChange}
-          required
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Voucher</label>
-        <input
-          type="number"
-          name="voucher"
-          value={formState.voucher || ''}
-          onChange={handleChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        />
-      </div>
+      <InputField key={'Name'} name={'name'} required={true} label='Name' type='text' value={formState.name} onChangeHandler={handleChange} />
+      <InputField key={'Birthdate'} name={'birthdate'} required={true} label='Birthdate' type='date' value={formState.birthdate} onChangeHandler={handleChange} />
+      <InputField key={'City'} name={'city'} required={true} label='City' type='text' value={formState.city} onChangeHandler={handleChange} />
+      <InputField key={'Vehicle Power'} name={'vehiclePower'} required={true} label='Vehicle Power' type='number' value={formState.vehiclePower} onChangeHandler={handleChange} />
+      <InputField key={'Voucher'} name={'voucher'} required={false} label='Voucher' type='number' value={formState.voucher} onChangeHandler={handleChange} />
       <button
         type="submit"
-        disabled={loading}
-        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        disabled={loading || !isFormValid}
+        className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${isFormValid ? "bg-indigo-600 hover:bg-indigo-700" : "bg-indigo-400"} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
       >
         {loading ? 'Calculating...' : 'Save'}
       </button>
