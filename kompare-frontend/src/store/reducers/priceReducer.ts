@@ -1,11 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { calculateInsurance } from '../../services/api';
-
-type Additional = {
-    // Coverage or discount
-    name: string,
-    amount: number
-}
+import { Additional } from '../../types/types';
+import { GetCoveragesRequestBody } from '../../interfaces/calculation';
 
 interface PriceState {
   priceDetails: {
@@ -35,7 +31,7 @@ const initialState: PriceState = {
 
 export const calculatePrice = createAsyncThunk(
   'price/calculatePrice',
-  async (data: any) => {
+  async (data: GetCoveragesRequestBody) => {
     const response = await calculateInsurance(data);
     console.log("marin");
     console.log(response);

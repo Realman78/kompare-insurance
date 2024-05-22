@@ -10,9 +10,14 @@ const GetDiscounts = async (req: GetDiscountsRequest, res: Response): Promise<vo
         const discounts = await Discount.find({});
 
         res.json({ message: "Successfully fetched coverages.", result: discounts });
-    } catch (e: any) {
-        console.log(e)
-        res.status(500).json({ message: "Error occured. Please try again.", error: e.message })
+    } catch (e: unknown) {
+        console.error(e);
+        
+        if (e instanceof Error) {
+            res.status(500).send(e.message);
+        } else {
+            res.status(500).send('An unknown error occurred');
+        }
     }
 }
 

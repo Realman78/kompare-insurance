@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchCoverages, fetchDiscounts } from '../../services/api';
+import { Coverage, Discount } from '../../types/types';
 
 interface ConfigState {
-  coverages: any[];
-  discounts: any[];
+  coverages: Coverage[];
+  discounts: Discount[];
   loading: boolean;
   error: string | null;
 }

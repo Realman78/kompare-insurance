@@ -12,10 +12,11 @@ import {
     VOUCHER,
 } from "../constants/names.constant";
 import { ADVISER_SELECTED_CONDITION, AO_PLUS_NO_AGE_CONDITION } from "../constants/errors.constant";
-import { round2Decimals } from "../utils/utils";
+import { calculateBasePrice, round2Decimals } from "../utils/utils";
+import { GetCoveragesRequestBody } from "../interfaces/calculation.interface";
 
-const calculateInsurancePrice = async (data: any) => {
-    const { name, birthdate, city, vehiclePower, voucher, selectedCoverages, selectedDiscounts } = data;
+const calculateInsurancePrice = async (data: GetCoveragesRequestBody) => {
+    const { birthdate, city, vehiclePower, voucher, selectedCoverages, selectedDiscounts } = data;
 
     const customerBirthdate = new Date(birthdate);
     const today = new Date();
@@ -28,7 +29,7 @@ const calculateInsurancePrice = async (data: any) => {
         age--;
     }
 
-    let basePrice = 100; // base price is a hardcoded number for now
+    let basePrice = calculateBasePrice(age, city);
 
     let coverageTotal = 0;
     let coverageDetails: Transactional[] = [];
@@ -81,7 +82,7 @@ const calculateInsurancePrice = async (data: any) => {
                             };
                         });
                         const currSum = coverageDetails.reduce((ps, a) => ps + a.value, 0);
-                        coverageTotal = currSum
+                        coverageTotal = currSum;
                         discountDetails.push({ name: discount.name, value: -round2Decimals(prevSum - currSum) });
                         continue;
                     }
@@ -135,7 +136,6 @@ const calculateInsurancePrice = async (data: any) => {
         totalPrice -= voucher;
         if (totalPrice < 0) totalPrice = 0;
         discountDetails.push({ name: VOUCHER, value: -round2Decimals(voucher) });
-
     }
     console.log(totalPrice);
 
@@ -144,17 +144,17 @@ const calculateInsurancePrice = async (data: any) => {
 
     return {
         basePrice: round2Decimals(basePrice),
-        coverages: coverageDetails.map(cd => {
+        coverages: coverageDetails.map((cd) => {
             return {
                 ...cd,
-                value: round2Decimals(cd.value)
-            }
+                value: round2Decimals(cd.value),
+            };
         }),
-        discounts: discountDetails.map(dd => {
+        discounts: discountDetails.map((dd) => {
             return {
                 ...dd,
-                value: round2Decimals(dd.value)
-            }
+                value: round2Decimals(dd.value),
+            };
         }),
         totalPrice: round2Decimals(totalPrice),
     };

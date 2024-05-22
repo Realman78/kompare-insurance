@@ -1,4 +1,5 @@
 export type Coverage = {
+    _id: string;
     name: string;
     type: string;
     values: number[];
@@ -6,6 +7,7 @@ export type Coverage = {
 }
 
 export type Discount = {
+    _id: string;
     name: string;
     type: string;
     values: number[];
@@ -16,6 +18,12 @@ export type Discount = {
 export type Transactional = {
     name: string;
     value: number;
+}
+
+export type Additional = {
+    // Coverage or discount
+    name: string,
+    value: number
 }
 
 export type SubmitComponentProps = {

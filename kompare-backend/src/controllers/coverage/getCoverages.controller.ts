@@ -10,9 +10,14 @@ const getCoverages = async (req: GetCoveragesRequest, res: Response): Promise<vo
         const coverages = await Coverage.find({});
 
         res.json({ message: "Successfully fetched coverages.", result: coverages });
-    } catch (e: any) {
-        console.log(e)
-        res.status(500).json({ message: "Error occured. Please try again.", error: e.message })
+    } catch (e: unknown) {
+        console.error(e);
+        
+        if (e instanceof Error) {
+            res.status(500).send(e.message);
+        } else {
+            res.status(500).send('An unknown error occurred');
+        }
     }
 }
 

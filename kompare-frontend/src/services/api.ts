@@ -1,9 +1,10 @@
 import axios from "axios";
 import { handleError } from "../utils/utils";
+import { GetCoveragesRequestBody } from "../interfaces/calculation";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export const calculateInsurance = async (data: any) => {
+export const calculateInsurance = async (data: GetCoveragesRequestBody) => {
     try {
         const response = await axios.post(`${API_URL}/calculate`, data);
         return response.data;

@@ -29,15 +29,8 @@ const MainWrapper: React.FC = () => {
                     dispatch(isLastCheckedCoverage ? toggleCoverage(lastCheckedId) : toggleDiscount(lastCheckedId));
                 }
             }
-            /* 
-            ovo bi bila super način revertanja na prošlo stanje u slučaju kompromisa baze
-            medutim, zahtijeva ts-ignore
-            if (a.error) {
-                if (isLastCheckedCoverage) dispatch(toggleCoverage(lastCheckedId));
-                else dispatch(toggleDiscount(lastCheckedId));
-            } */
-        } catch (e: any) {
-            console.log(e);
+        } catch (e: unknown) {
+            console.error(e);
         } finally {
             setLoading(false);
         }

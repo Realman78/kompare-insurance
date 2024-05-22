@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import { Additional } from "../types/types";
 
 const PriceDetails: React.FC = () => {
     const { priceDetails } = useSelector((state: RootState) => state.price);
@@ -14,7 +15,7 @@ const PriceDetails: React.FC = () => {
             {priceDetails.discounts.length > 0 && (
                 <div>
                     <h3 className="text-lg font-semibold mb-2">Discounts</h3>
-                    {priceDetails.discounts.map((discount: any) => (
+                    {priceDetails.discounts.map((discount: Additional) => (
                         <div key={discount.name} className="mb-1">
                             {discount.name}: {discount.value} EUR
                         </div>
@@ -25,7 +26,7 @@ const PriceDetails: React.FC = () => {
             {priceDetails.coverages.length > 0 && (
                 <div>
                     <h3 className="text-lg font-semibold mb-2">Coverages</h3>
-                    {priceDetails.coverages.map((coverage: any) => (
+                    {priceDetails.coverages.map((coverage: Additional) => (
                         <div key={coverage.name} className="mb-1">
                             {coverage.name}: {coverage.value} EUR
                         </div>
