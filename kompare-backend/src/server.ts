@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
+import path from 'path'
 import helmet from "helmet";
 
 import errorHandler from './utils/errorHandler'
@@ -30,11 +31,11 @@ const createServer = (): express.Express => {
 
   app.get('/api/*', errorHandler)
 
-//   app.use(express.static(path.join(__dirname, '..', 'build')));
+  app.use(express.static(path.join(__dirname, '..', '..', 'build')));
 
-//   app.get('*', (req: Request, res: Response) => {
-//     res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
-//   });
+  app.get('*', (req: Request, res: Response) => {
+    res.sendFile(path.resolve(__dirname, '..', '..', 'build', 'index.html'));
+  });
 
   return app
 }

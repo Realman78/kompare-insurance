@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    volumes:
+      - mongodb_data:/data/db
+      - ./data:/data/backup
+    ports:
+      - "27017:27017"
+
+  backend:
+    build: ./kompare-backend
+    ports:
+      - "8080:8080"
+    environment:
+      MONGO_URI: "mongodb://mongodb:27017/kompare"
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:
+  data:
