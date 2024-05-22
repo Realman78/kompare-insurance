@@ -12,13 +12,13 @@ type CheckboxProps = {
 
 const Checkbox: React.FC<CheckboxProps> = ({ transactionalName, transactionalId, handleChange, checked, disabled = false, invisible = false}) => {
     return (
-        <div key={transactionalId} className={`${invisible ? 'hidden' : 'flex'} items-center mb-2`}>
-            <label className="flex items-center h-full">
+        <div key={transactionalId} className={`${invisible ? 'hidden' : 'flex'} ${disabled ? "[&>*]:cursor-not-allowed" : ""} items-center mb-2`}>
+            <label className={`flex  items-center h-full`}>
                 <input
                     type="checkbox"
                     checked={checked}
                     onChange={handleChange}
-                    className="mr-2"
+                    className={`mr-2 ${disabled ? "!cursor-not-allowed" : ""}`}
                     disabled={disabled}
                 />
                 <span>{transactionalName}</span>

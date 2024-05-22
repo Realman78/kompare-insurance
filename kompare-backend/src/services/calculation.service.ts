@@ -1,6 +1,6 @@
-import Coverage from "../../models/Coverage.model";
-import { Transactional } from "../../types/types";
-import Discount from "../../models/Discount.model";
+import Coverage from "../models/Coverage.model";
+import { Transactional } from "../types/types";
+import Discount from "../models/Discount.model";
 import {
     ADVISER_DISCOUNT,
     AO_PLUS,
@@ -10,9 +10,9 @@ import {
     STRONG_CAR_SURCHARGE,
     VIP_DISCOUNT,
     VOUCHER,
-} from "../../constants/names.constant";
-import { ADVISER_SELECTED_CONDITION, AO_PLUS_NO_AGE_CONDITION } from "../../constants/errors.constant";
-import { round2Decimals } from "../../utils/utils";
+} from "../constants/names.constant";
+import { ADVISER_SELECTED_CONDITION, AO_PLUS_NO_AGE_CONDITION } from "../constants/errors.constant";
+import { round2Decimals } from "../utils/utils";
 
 const calculateInsurancePrice = async (data: any) => {
     const { name, birthdate, city, vehiclePower, voucher, selectedCoverages, selectedDiscounts } = data;

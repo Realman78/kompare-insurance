@@ -21,6 +21,9 @@ export type Transactional = {
 export type SubmitComponentProps = {
     handleSubmit: (e?: React.FormEvent<HTMLFormElement>) => Promise<void>
     loading: boolean;
+    isFormValid: boolean;
+    isFormLocked: boolean;
+    setIsFormValid: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type RTSubmitComponentProps = {
@@ -34,5 +37,6 @@ export type InputFieldProps = {
     value: string | number | undefined;
     type: string;
     name: string;
+    isFormLocked: boolean;
     onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }

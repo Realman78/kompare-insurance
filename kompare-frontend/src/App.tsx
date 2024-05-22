@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Provider, useDispatch, useSelector } from 'react-redux';
-import MainForm from './components/MainForm';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import PriceDetails from './components/PriceDetails';
-import store, { AppDispatch, RootState } from './store';
+import React, { useEffect } from 'react';
+import { Provider, useDispatch } from 'react-redux';
+import store, { AppDispatch } from './store';
 import { getCoverages, getDiscounts } from './store/reducers/configReducer';
 import { UnknownAction } from '@reduxjs/toolkit';
-import { cleanCoverageAndDiscounts } from './store/reducers/formReducer';
-import { calculatePrice } from './store/reducers/priceReducer';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import MainWrapper from './components/MainWrapper';
 
 const AppContent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
  
   useEffect(() => {
-    console.log("aloooooooooooooooooo");
     dispatch(getCoverages() as unknown as UnknownAction);
     dispatch(getDiscounts() as unknown as UnknownAction);
   }, []);
@@ -23,6 +19,7 @@ const AppContent: React.FC = () => {
   return (
     <div className="container mx-auto p-4">
       <MainWrapper />
+      <ToastContainer />
     </div>
   );
 };

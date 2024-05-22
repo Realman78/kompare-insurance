@@ -37,6 +37,8 @@ export const calculatePrice = createAsyncThunk(
   'price/calculatePrice',
   async (data: any) => {
     const response = await calculateInsurance(data);
+    console.log("marin");
+    console.log(response);
     return response;
   }
 );
@@ -44,7 +46,11 @@ export const calculatePrice = createAsyncThunk(
 const priceSlice = createSlice({
   name: 'price',
   initialState,
-  reducers: {},
+  reducers: {
+    resetPriceDetails: (state) => {
+      state.priceDetails = initialState.priceDetails
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(calculatePrice.pending, (state) => {
@@ -61,5 +67,7 @@ const priceSlice = createSlice({
       });
   },
 });
+
+export const { resetPriceDetails } = priceSlice.actions;
 
 export default priceSlice.reducer;

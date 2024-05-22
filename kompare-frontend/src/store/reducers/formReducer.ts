@@ -15,6 +15,7 @@ const initialState: FormState = {
   birthdate: '',
   city: '',
   vehiclePower: 0,
+  voucher: 0,
   selectedCoverages: [],
   selectedDiscounts: [],
 };
