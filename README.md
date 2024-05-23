@@ -3,7 +3,7 @@
 
 ### Prerequisites
 
-Ensure that you have Docker installed on your machine. For installation instructions, visit [Docker's official website](https://docs.docker.com/get-docker/).
+Ensure that you have Docker and docker-compose installed on your machine. For installation instructions, visit [Docker's official website](https://docs.docker.com/get-docker/).
 
 ## Installation and running
 
