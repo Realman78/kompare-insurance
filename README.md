@@ -30,4 +30,7 @@ npm run test
 ```
 
 ## Troubleshooting
+If you cannot get the project to run, check if you already have something running on ports 8080 or 27017.
+
+
 If, for some reason, you dont see any coverages or discounts, navigate to '/api/repopulate'. Now, everything should be populated and you can return to '/'. **This is just a precaution. Everything should work.**
